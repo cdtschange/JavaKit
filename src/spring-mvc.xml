@@ -6,8 +6,13 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
     <context:component-scan base-package="com.javademo.controller"/>
+    <context:component-scan base-package="com.javademo.service"/>
+    <context:component-scan base-package="com.javademo.dao"/>
+
     <!-- 静态资源(js、image等)的访问 -->
     <mvc:default-servlet-handler/>
+    <mvc:resources location="/WEB-INF/images/" mapping="/image/**"/>
+    <mvc:resources location="/WEB-INF/xml/" mapping="/xml/**"/>
 
     <!-- 开启注解 -->
     <mvc:annotation-driven/>
@@ -19,4 +24,6 @@
         <property name="prefix" value="/WEB-INF/views/"/>
         <property name="suffix" value=".jsp"/>
     </bean>
+
+    <bean id="exceptionResolver" class="com.javakit.data.exception.NetExceptionResolver"/>
 </beans>

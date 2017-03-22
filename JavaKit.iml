@@ -42,5 +42,6 @@
     <orderEntry type="library" name="Hibernate 5.2.3-5.2.3" level="project" />
     <orderEntry type="library" name="Spring MVC-4.3.7.RELEASE" level="project" />
     <orderEntry type="module" module-name="SDK" />
+    <orderEntry type="library" name="jackson-core-2.8.7" level="project" />
   </component>
 </module>

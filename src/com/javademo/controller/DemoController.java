@@ -1,9 +1,12 @@
 package com.javademo.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.javademo.schema.BaseController;
 import com.javademo.service.DemoService;
 import com.javakit.data.exception.NetError;
 import com.javakit.data.exception.NetException;
+import com.javakit.network.HttpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -11,6 +14,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -67,5 +71,19 @@ public class DemoController extends BaseController {
             model.addAttribute("result", result);
         }
         return "login";
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "requestHttp", method = RequestMethod.GET)
+    public Object requestHttp(ModelMap model) {
+        String result = HttpRequest.sendGet("https://app.jimu.com/hello/app/v2", null);
+        ObjectMapper mapper = new ObjectMapper();
+        Object json = null;
+        try {
+            json = mapper.readValue(result, Object.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return json;
     }
 }

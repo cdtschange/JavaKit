@@ -8,7 +8,7 @@
       </database-info>
       <case-sensitivity plain-identifiers="mixed" quoted-identifiers="upper" />
       <secret-storage>master_key</secret-storage>
-      <user-name>demo</user-name>
+      <user-name>root</user-name>
       <resolve-scope>javakit:</resolve-scope>
     </data-source>
   </component>

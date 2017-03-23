@@ -28,6 +28,10 @@
   <ul>
     <li><a href="demo/login">Demo/Login</a></li>
   </ul>
+  <h2>Request</h2>
+  <ul>
+    <li><a href="demo/requestHttp">Demo/Request Http</a></li>
+  </ul>
 
   </body>
 </html>

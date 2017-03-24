@@ -5,6 +5,7 @@ package com.javakit.data.exception;
  */
 public enum NetError {
 
+    Success(200, "成功"),
     BadRequest(400, "系统错误");
 
     private int code;

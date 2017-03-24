@@ -45,7 +45,7 @@ public class HttpRequest {
      *            请求参数
      * @return URL 所代表远程资源的响应结果
      */
-    public static String sendGet(String url, HashMap<String, String> data) {
+    public static String sendGet(String url, Map<String, String> data) {
         if (url.startsWith("https://")) {
             return sendHttps(url, "GET", data);
         } else if (url.startsWith("http://")) {
@@ -64,7 +64,7 @@ public class HttpRequest {
      *            请求参数
      * @return 所代表远程资源的响应结果
      */
-    public static String sendPost(String url, HashMap<String, String> data) {
+    public static String sendPost(String url, Map<String, String> data) {
         if (url.startsWith("https://")) {
             return sendHttps(url, "POST", data);
         } else if (url.startsWith("http://")) {
@@ -79,7 +79,7 @@ public class HttpRequest {
      * @param data
      * @return
      */
-    public static String httpBuildQuery(HashMap<String, String> data) {
+    public static String httpBuildQuery(Map<String, String> data) {
         String ret = "";
         String k, v;
         Iterator<String> iterator = data.keySet().iterator();
@@ -95,7 +95,7 @@ public class HttpRequest {
         return ret.substring(0, ret.length() - 1);
     }
 
-    protected static String sendHttpGet(String url, HashMap<String, String> data) {
+    protected static String sendHttpGet(String url, Map<String, String> data) {
         String result = "";
         BufferedReader in = null;
         try {
@@ -143,7 +143,7 @@ public class HttpRequest {
         }
         return result;
     }
-    protected static String sendHttpPost(String url, HashMap<String, String> data) {
+    protected static String sendHttpPost(String url, Map<String, String> data) {
         PrintWriter out = null;
         BufferedReader in = null;
         String result = "";
@@ -197,7 +197,7 @@ public class HttpRequest {
         return result;
     }
 
-    protected static String sendHttps(String url, String method, HashMap<String, String> data) {
+    protected static String sendHttps(String url, String method, Map<String, String> data) {
         try {
             SSLContext sc = SSLContext.getInstance("SSL");
             sc.init(null, new TrustManager[]{new HttpRequest.TrustAnyTrustManager()}, new java.security.SecureRandom());

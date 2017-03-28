@@ -9,7 +9,9 @@
       <case-sensitivity plain-identifiers="mixed" quoted-identifiers="upper" />
       <secret-storage>master_key</secret-storage>
       <user-name>root</user-name>
+      <introspection-schemas>*:javakit</introspection-schemas>
       <resolve-scope>javakit:</resolve-scope>
+      <unqualified-resolve-schemas>javakit:</unqualified-resolve-schemas>
     </data-source>
   </component>
 </project>

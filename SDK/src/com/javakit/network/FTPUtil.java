@@ -109,7 +109,6 @@ public class FTPUtil {
                 ftpClient.storeFile(fileName, is);
                 is.close();
             }else{
-                Log.info("上传FTP服务器路径有误！");
                 throw NetException.BusinessException("上传FTP服务器路径有误");
             }
         } catch (Exception e) {
@@ -176,9 +175,9 @@ public class FTPUtil {
                 ftpClient.changeToParentDirectory();
             }
             //os.flush();
-            Log.info("下载成功！");
+            Log.info("下载成功");
         } catch (IOException e) {
-            Log.error("下载失败！",e);
+            Log.error("下载失败",e);
         }
     }
     /**
@@ -206,9 +205,9 @@ public class FTPUtil {
                 ftpClient.retrieveFile(file.getName(), os);
                 ftpClient.changeToParentDirectory();
             }
-            Log.info("下载成功！");
+            Log.info("下载成功");
         } catch (IOException e) {
-            Log.error("下载失败！",e);
+            Log.error("下载失败", e);
         }
     }
 
@@ -223,7 +222,7 @@ public class FTPUtil {
             boolean falg = ftpClient.changeWorkingDirectory(fileName);
             return falg;
         } catch (IOException e) {
-            Log.error(e.getMessage(), e);
+            Log.error(e);
         }
         return false;
     }
@@ -242,10 +241,9 @@ public class FTPUtil {
                 os.write(temp);
             }
             is.close();
-            Log.info("压缩成功！");
+            Log.info("压缩成功");
         } catch (IOException e) {
-            // TODO Auto-generated catch block
-            Log.error(e.getMessage(), e);
+            Log.error(e);
 
         } finally{
             try {
@@ -253,8 +251,7 @@ public class FTPUtil {
                     is.close();
                 }
             } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                Log.error(e);
             }
         }
     }

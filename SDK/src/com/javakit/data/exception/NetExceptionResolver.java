@@ -39,7 +39,6 @@ public class NetExceptionResolver implements HandlerExceptionResolver {
                 map.put("detail", sb.toString());
             }
         } catch (Exception e1) {
-            e1.printStackTrace();
             map.put("message", e.toString());
             StringBuilder sb = new StringBuilder();
             for (StackTraceElement se: e.getStackTrace()) {

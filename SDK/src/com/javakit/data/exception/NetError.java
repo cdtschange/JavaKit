@@ -5,11 +5,13 @@ package com.javakit.data.exception;
  */
 public enum NetError {
 
-    Success(200, "成功"),
-    BadRequest(400, "系统错误");
+
+    Success(NetErrorCode.Success, "成功"),
+    BadRequest(NetErrorCode.BadRequest, "系统错误");
 
     private int code;
     private String message;
+
 
     private NetError(int code, String message) {
         this.setCode(code);

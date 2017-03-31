@@ -1,5 +1,7 @@
 package com.javakit.network;
 
+import org.json.JSONObject;
+
 import javax.net.ssl.*;
 import java.io.*;
 import java.net.URL;
@@ -69,6 +71,15 @@ public class HttpRequest {
             return sendHttps(url, "POST", data);
         } else if (url.startsWith("http://")) {
             return sendHttpPost(url, data);
+        } else {
+            return "";
+        }
+    }
+    public static String sendPost(String url, JSONObject json) {
+        if (url.startsWith("https://")) {
+            return sendHttps(url, "POST", json);
+        } else if (url.startsWith("http://")) {
+            return sendHttpPost(url, json);
         } else {
             return "";
         }
@@ -144,14 +155,21 @@ public class HttpRequest {
         return result;
     }
     protected static String sendHttpPost(String url, Map<String, String> data) {
+        String param = "";
+        if (data != null && data.size() > 0) {
+            param = httpBuildQuery(data);
+        }
+        return sendHttpPost(url, param);
+    }
+    protected static String sendHttpPost(String url, JSONObject json) {
+        return sendHttpPost(url, json.toString());
+    }
+    protected static String sendHttpPost(String url, String data) {
         PrintWriter out = null;
         BufferedReader in = null;
         String result = "";
         try {
-            String param = "";
-            if (data != null && data.size() > 0) {
-                param = httpBuildQuery(data);
-            }
+            String param = data;
             URL realUrl = new URL(url);
             // 打开和URL之间的连接
             URLConnection conn = realUrl.openConnection();
@@ -197,7 +215,15 @@ public class HttpRequest {
         return result;
     }
 
+
+
     protected static String sendHttps(String url, String method, Map<String, String> data) {
+        return sendHttps(url, method, httpBuildQuery(data));
+    }
+    protected static String sendHttps(String url, String method, JSONObject json) {
+        return sendHttps(url, method, json.toString());
+    }
+    protected static String sendHttps(String url, String method, String data) {
         try {
             SSLContext sc = SSLContext.getInstance("SSL");
             sc.init(null, new TrustManager[]{new HttpRequest.TrustAnyTrustManager()}, new java.security.SecureRandom());
@@ -214,7 +240,7 @@ public class HttpRequest {
 
             PrintWriter writer = new PrintWriter(conn.getOutputStream());
             if (data != null) {
-                writer.print(httpBuildQuery(data));
+                writer.print(data);
             }
             writer.flush();
             writer.close();

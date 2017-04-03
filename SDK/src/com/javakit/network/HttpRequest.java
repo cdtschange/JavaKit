@@ -91,6 +91,9 @@ public class HttpRequest {
      * @return
      */
     public static String httpBuildQuery(Map<String, String> data) {
+        if (data == null) {
+            return null;
+        }
         String ret = "";
         String k, v;
         Iterator<String> iterator = data.keySet().iterator();

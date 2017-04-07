@@ -16,4 +16,10 @@ public class BaseKitController {
         map.put("data", object);
         return map;
     }
+    public Map<String, Object> getResultSuccess() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("code", NetError.Success.getCode());
+        map.put("data", new Object());
+        return map;
+    }
 }

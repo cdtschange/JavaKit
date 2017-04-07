@@ -1,5 +1,6 @@
 package com.javakit.dao;
 
+import com.javakit.data.log.Log;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +32,10 @@ public abstract class BaseKitDAO<T> {
         try {
             Session session = sessionFactory.getCurrentSession();
             session.save(entity);
+            session.getTransaction().commit();
             return entity;
         } catch (Exception e) {
+            Log.error("创建失败",  e);
             return null;
         }
     }
@@ -41,8 +44,22 @@ public abstract class BaseKitDAO<T> {
         try {
             Session session = sessionFactory.getCurrentSession();
             session.update(entity);
+            session.getTransaction().commit();
             return entity;
         } catch (Exception e) {
+            Log.error("更新失败", e);
+            return null;
+        }
+    }
+
+    public T delete(T entity) {
+        try {
+            Session session = sessionFactory.getCurrentSession();
+            session.delete(entity);
+            session.getTransaction().commit();
+            return entity;
+        } catch (Exception e) {
+            Log.error("删除失败", e);
             return null;
         }
     }

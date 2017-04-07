@@ -4,6 +4,7 @@ import org.json.JSONObject;
 
 import javax.net.ssl.*;
 import java.io.*;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
@@ -48,10 +49,13 @@ public class HttpRequest {
      * @return URL 所代表远程资源的响应结果
      */
     public static String sendGet(String url, Map<String, String> data) {
+        return sendGet(url, data, null);
+    }
+    public static String sendGet(String url, Map<String, String> data, RequestHandler handler) {
         if (url.startsWith("https://")) {
-            return sendHttps(url, "GET", data);
+            return sendHttps(url, "GET", data, handler);
         } else if (url.startsWith("http://")) {
-            return sendHttpGet(url, data);
+            return sendHttpGet(url, data, handler);
         } else {
             return "";
         }
@@ -67,19 +71,25 @@ public class HttpRequest {
      * @return 所代表远程资源的响应结果
      */
     public static String sendPost(String url, Map<String, String> data) {
+        return sendPost(url, data);
+    }
+    public static String sendPost(String url, JSONObject json) {
+        return sendPost(url, json);
+    }
+    public static String sendPost(String url, Map<String, String> data, RequestHandler handler) {
         if (url.startsWith("https://")) {
-            return sendHttps(url, "POST", data);
+            return sendHttps(url, "POST", data, handler);
         } else if (url.startsWith("http://")) {
-            return sendHttpPost(url, data);
+            return sendHttpPost(url, data, handler);
         } else {
             return "";
         }
     }
-    public static String sendPost(String url, JSONObject json) {
+    public static String sendPost(String url, JSONObject json, RequestHandler handler) {
         if (url.startsWith("https://")) {
-            return sendHttps(url, "POST", json);
+            return sendHttps(url, "POST", json, handler);
         } else if (url.startsWith("http://")) {
-            return sendHttpPost(url, json);
+            return sendHttpPost(url, json, handler);
         } else {
             return "";
         }
@@ -109,7 +119,7 @@ public class HttpRequest {
         return ret.substring(0, ret.length() - 1);
     }
 
-    protected static String sendHttpGet(String url, Map<String, String> data) {
+    protected static String sendHttpGet(String url, Map<String, String> data, RequestHandler handler) {
         String result = "";
         BufferedReader in = null;
         try {
@@ -157,17 +167,17 @@ public class HttpRequest {
         }
         return result;
     }
-    protected static String sendHttpPost(String url, Map<String, String> data) {
+    protected static String sendHttpPost(String url, Map<String, String> data, RequestHandler handler) {
         String param = "";
         if (data != null && data.size() > 0) {
             param = httpBuildQuery(data);
         }
-        return sendHttpPost(url, param);
+        return sendHttpPost(url, param, handler);
     }
-    protected static String sendHttpPost(String url, JSONObject json) {
-        return sendHttpPost(url, json.toString());
+    protected static String sendHttpPost(String url, JSONObject json, RequestHandler handler) {
+        return sendHttpPost(url, json.toString(), handler);
     }
-    protected static String sendHttpPost(String url, String data) {
+    protected static String sendHttpPost(String url, String data, RequestHandler handler) {
         PrintWriter out = null;
         BufferedReader in = null;
         String result = "";
@@ -184,6 +194,10 @@ public class HttpRequest {
             // 发送POST请求必须设置如下两行
             conn.setDoOutput(true);
             conn.setDoInput(true);
+
+            if (handler != null) {
+                handler.willRequest(conn);
+            }
             // 获取URLConnection对象对应的输出流
             out = new PrintWriter(conn.getOutputStream());
             // 发送请求参数
@@ -220,13 +234,13 @@ public class HttpRequest {
 
 
 
-    protected static String sendHttps(String url, String method, Map<String, String> data) {
-        return sendHttps(url, method, httpBuildQuery(data));
+    protected static String sendHttps(String url, String method, Map<String, String> data, RequestHandler handler) {
+        return sendHttps(url, method, httpBuildQuery(data), handler);
     }
-    protected static String sendHttps(String url, String method, JSONObject json) {
-        return sendHttps(url, method, json.toString());
+    protected static String sendHttps(String url, String method, JSONObject json, RequestHandler handler) {
+        return sendHttps(url, method, json.toString(), handler);
     }
-    protected static String sendHttps(String url, String method, String data) {
+    protected static String sendHttps(String url, String method, String data, RequestHandler handler) {
         try {
             SSLContext sc = SSLContext.getInstance("SSL");
             sc.init(null, new TrustManager[]{new HttpRequest.TrustAnyTrustManager()}, new java.security.SecureRandom());
@@ -240,6 +254,10 @@ public class HttpRequest {
 
             conn.setDoInput(true);
             conn.setDoOutput(true);
+
+            if (handler != null) {
+                handler.willRequest(conn);
+            }
 
             PrintWriter writer = new PrintWriter(conn.getOutputStream());
             if (data != null) {
@@ -275,6 +293,10 @@ public class HttpRequest {
         } catch (Exception e) {
             return e.toString();
         }
+    }
+
+    public interface RequestHandler {
+        void willRequest(URLConnection conn);
     }
 
 }

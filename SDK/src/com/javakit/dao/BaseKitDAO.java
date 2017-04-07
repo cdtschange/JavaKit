@@ -32,7 +32,6 @@ public abstract class BaseKitDAO<T> {
         try {
             Session session = sessionFactory.getCurrentSession();
             session.save(entity);
-            session.getTransaction().commit();
             return entity;
         } catch (Exception e) {
             Log.error("创建失败",  e);
@@ -44,7 +43,6 @@ public abstract class BaseKitDAO<T> {
         try {
             Session session = sessionFactory.getCurrentSession();
             session.update(entity);
-            session.getTransaction().commit();
             return entity;
         } catch (Exception e) {
             Log.error("更新失败", e);

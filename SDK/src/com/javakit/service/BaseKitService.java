@@ -11,6 +11,14 @@ public abstract class BaseKitService<T> {
 
     public abstract BaseKitDAO<T> getDAO();
 
+    public T create(T entity) {
+        return getDAO().create(entity);
+    }
+
+    public T update(T entity) {
+        return getDAO().update(entity);
+    }
+
     public T loadById(String entityId) {
         return getDAO().loadById(entityId);
     }

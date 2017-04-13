@@ -3,6 +3,7 @@ package com.javakit.dao;
 import com.javakit.data.log.Log;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -30,8 +31,11 @@ public abstract class BaseKitDAO<T> {
 
     public T create(T entity) {
         try {
-            Session session = sessionFactory.getCurrentSession();
+            Session session = sessionFactory.openSession();
+            session.beginTransaction();
             session.save(entity);
+            session.getTransaction().commit();
+            session.close();
             return entity;
         } catch (Exception e) {
             Log.error("创建失败",  e);
@@ -41,8 +45,11 @@ public abstract class BaseKitDAO<T> {
 
     public T update(T entity) {
         try {
-            Session session = sessionFactory.getCurrentSession();
+            Session session = sessionFactory.openSession();
+            session.beginTransaction();
             session.update(entity);
+            session.getTransaction().commit();
+            session.close();
             return entity;
         } catch (Exception e) {
             Log.error("更新失败", e);
@@ -52,9 +59,11 @@ public abstract class BaseKitDAO<T> {
 
     public T delete(T entity) {
         try {
-            Session session = sessionFactory.getCurrentSession();
+            Session session = sessionFactory.openSession();
+            session.beginTransaction();
             session.delete(entity);
             session.getTransaction().commit();
+            session.close();
             return entity;
         } catch (Exception e) {
             Log.error("删除失败", e);
@@ -85,6 +94,7 @@ public abstract class BaseKitDAO<T> {
             return null;
         }
     }
+
     protected List<T> queryList(Map<String, String> map) {
         Session session = sessionFactory.getCurrentSession();
         CriteriaBuilder builder = session.getCriteriaBuilder();

@@ -25,6 +25,9 @@ public abstract class BaseKitService<T> {
     public List<T> loadAll() {
         return getDAO().loadAll();
     }
+    public List<T> load(int page, int number) {
+        return getDAO().loadAll();
+    }
     public T deleteById(String entityId) {
         T entity = loadById(entityId);
         if (entity == null)

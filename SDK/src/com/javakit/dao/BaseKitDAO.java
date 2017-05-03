@@ -1,6 +1,7 @@
 package com.javakit.dao;
 
 import com.javakit.data.log.Log;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -110,6 +111,38 @@ public abstract class BaseKitDAO<T> {
             cq.where(conditions.toArray(new Predicate[0]));
         }
         List<T> list = session.createQuery(cq).getResultList();
+        if (list != null && list.size() > 0) {
+            return list;
+        } else {
+            return new ArrayList<>();
+        }
+    }
+
+    public List<T> queryPagedList(int page, int number) {
+        return queryPagedList(page, number, null, null, false);
+    }
+    public List<T> queryPagedList(int page, int number, Map<String, String> query, String orderKey, boolean orderAsc) {
+        Session session = sessionFactory.getCurrentSession();
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        Class <T> entityClass = (Class <T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+        CriteriaQuery<T> cq = builder.createQuery(entityClass);
+        Root<T> root = cq.from(entityClass);
+        if (query != null && query.size() > 0) {
+            List<Predicate> conditions = new ArrayList<>();
+            for (Map.Entry<String, String> entry : query.entrySet()) {
+                Predicate condition = builder.like(root.get(entry.getKey()), "%" + entry.getValue() + "%");
+                conditions.add(condition);
+            }
+            cq.where(builder.or(conditions.toArray(new Predicate[0])));
+        }
+        if (!StringUtils.isEmpty(orderKey)) {
+            if (orderAsc) {
+                cq.orderBy(builder.asc(root.get(orderKey)));
+            } else {
+                cq.orderBy(builder.desc(root.get(orderKey)));
+            }
+        }
+        List<T> list = session.createQuery(cq).setFirstResult(page * number).setMaxResults(number).getResultList();
         if (list != null && list.size() > 0) {
             return list;
         } else {

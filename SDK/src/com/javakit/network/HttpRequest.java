@@ -71,10 +71,10 @@ public class HttpRequest {
      * @return 所代表远程资源的响应结果
      */
     public static String sendPost(String url, Map<String, String> data) {
-        return sendPost(url, data);
+        return sendPost(url, data, null);
     }
     public static String sendPost(String url, JSONObject json) {
-        return sendPost(url, json);
+        return sendPost(url, json, null);
     }
     public static String sendPost(String url, Map<String, String> data, RequestHandler handler) {
         if (url.startsWith("https://")) {
